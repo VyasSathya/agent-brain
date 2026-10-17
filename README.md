@@ -6,6 +6,11 @@ one was a different tool.
 
 Python standard library only. No model calls, no embeddings, no network, no service to run.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/how-it-works-dark.png">
+  <img src="docs/how-it-works-light.png" alt="How it works: Claude Code and Codex share one brain folder. The SessionStart hook injects facts and the newest handoffs; agents call route, current, search and read, save handoffs, and the Stop hook stores each last reply as unreviewed. Handoffs cite a path, line and exact quote in your repo, and current flags evidence_changed when that file moves on.">
+</picture>
+
 ## The problem
 
 Coding agents forget. Every new session starts cold, and the usual fixes make it worse in quieter ways:
@@ -57,6 +62,8 @@ PowerShell: `function brain { python -m agent_brain --brain examples/tiny-brain 
 
 The example brain (`examples/tiny-brain`) knows one project, `examples/todo-api`, whose `NOTES.md` records a
 pagination bug and its fix.
+
+![The tour, run for real: route a folder, save a handoff, see it current, get refused for saving it again without saying what it replaces, change the cited file, and see evidence_changed turn True](docs/tour.gif)
 
 **1. Route a folder.** Any folder inside the project resolves to it:
 
