@@ -1,0 +1,8 @@
+{
+  "startup_files": ["facts.md", "user.md"],
+  "global_files": ["facts.md", "user.md", "notes.md"],
+  "startup_budget": 8000,
+  "active_days": 14,
+  "git_sync": false,
+  "render_agents": null
+}

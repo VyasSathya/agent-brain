@@ -1,0 +1,4 @@
+captures/
+backups/
+logs/
+*.tmp

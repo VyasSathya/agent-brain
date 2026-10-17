@@ -1,0 +1,15 @@
+{
+  "project": "todo-api",
+  "task": "cursor-pagination",
+  "objective": "Cursor pagination returns every todo exactly once",
+  "overview": "Duplicate rows fixed by ordering on (created_at, id). Passes locally; staging deploy not done.",
+  "completed": ["Cursor ordering changed to (created_at, id)"],
+  "remaining": ["Deploy to staging", "Confirm no duplicates against staging data"],
+  "validated": ["test_pagination_no_duplicates passes locally (unit test only, not staging)"],
+  "released": [],
+  "constraints": ["Do not deploy to production without asking"],
+  "evidence": [
+    {"path": "todo-api/NOTES.md", "line": 9, "quote": "Fixed: the cursor now orders by (created_at, id)."},
+    {"path": "todo-api/NOTES.md", "line": 10, "quote": "Not yet deployed to staging."}
+  ]
+}

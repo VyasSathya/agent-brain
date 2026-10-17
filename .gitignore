@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Written when you run the quickstart against the example brain
+examples/tiny-brain/handoffs/*
+!examples/tiny-brain/handoffs/.gitkeep
+examples/tiny-brain/captures/
+examples/tiny-brain/backups/
+examples/tiny-brain/machines.json

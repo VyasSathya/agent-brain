@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "projects": {
+    "todo-api": {
+      "source": "../todo-api",
+      "memory": "projects/todo-api.md",
+      "paths": [
+        {"path": "../todo-api", "role": "source"}
+      ],
+      "evidence_files": ["../todo-api/NOTES.md"]
+    }
+  }
+}
