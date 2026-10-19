@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "rubric": "source-grounding-v1",
+  "cases": [
+    {
+      "id": "current-correction-before-history",
+      "dimension": "retrieval",
+      "steps": [
+        {"handoff": {}, "remember": "OLD", "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"handoff": {"supersedes": ["${OLD}"], "validated": ["Pagination fixed"], "evidence": [{"path": "${APP}/notes.md", "line": 2, "quote": "Pagination fixed: cursor skips zero rows."}]}, "remember": "NEW", "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"args": ["search", "--project", "app", "--query", "Pagination"], "checks": [
+          {"path": ["data", "results", 0, "id"], "op": "equals", "value": "${NEW}"},
+          {"path": ["data", "results", 0, "status"], "op": "equals", "value": "current"},
+          {"path": ["data", "results", 0, "evidence", 0, "line"], "op": "equals", "value": 2}
+        ]}
+      ]
+    },
+    {
+      "id": "irrelevant-query-abstains",
+      "dimension": "retrieval",
+      "steps": [{"args": ["search", "--project", "app", "--query", "unfindablequasar"], "checks": [
+        {"path": ["data", "results"], "op": "equals", "value": []},
+        {"path": ["data", "total_matches"], "op": "equals", "value": 0}
+      ]}]
+    },
+    {
+      "id": "search-pagination-has-continuation",
+      "dimension": "retrieval",
+      "steps": [
+        {"handoff": {}, "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"args": ["search", "--project", "app", "--query", "Pagination", "--limit", "1"], "checks": [
+          {"path": ["data", "next_offset"], "op": "equals", "value": 1},
+          {"path": ["data", "truncated"], "op": "equals", "value": true}
+        ]},
+        {"args": ["search", "--project", "app", "--query", "Pagination", "--offset", "1", "--limit", "1"], "checks": [
+          {"path": ["data", "results", 0, "line"], "op": "equals", "value": 1},
+          {"path": ["data", "results", 0, "excerpt"], "op": "contains", "value": "Pagination failed"}
+        ]}
+      ]
+    },
+    {
+      "id": "exact-source-line-readback",
+      "dimension": "provenance",
+      "steps": [{"args": ["read", "--project", "app", "--path", "${APP}/notes.md", "--line", "2", "--count", "1"], "checks": [
+        {"path": ["data", "lines", 0, "line"], "op": "equals", "value": 2},
+        {"path": ["data", "lines", 0, "text"], "op": "equals", "value": "Pagination fixed: cursor skips zero rows."}
+      ]}]
+    },
+    {
+      "id": "fabricated-quote-rejected",
+      "dimension": "provenance",
+      "steps": [{"handoff": {"evidence": [{"path": "${APP}/notes.md", "line": 2, "quote": "Deployment verified in production."}]}, "checks": [
+        {"path": ["exit_code"], "op": "equals", "value": 1},
+        {"path": ["error"], "op": "contains", "value": "quote"}
+      ]}]
+    },
+    {
+      "id": "source-change-invalidates-evidence",
+      "dimension": "provenance",
+      "steps": [
+        {"handoff": {}, "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"args": ["current", "--project", "app"], "checks": [{"path": ["data", "tasks", 0, "evidence_changed"], "op": "equals", "value": false}]},
+        {"write": "app/notes.md", "text": "Pagination was changed after the evidence capture.\n"},
+        {"args": ["current", "--project", "app"], "checks": [{"path": ["data", "tasks", 0, "evidence_changed"], "op": "equals", "value": true}]}
+      ]
+    },
+    {
+      "id": "search-excludes-other-project",
+      "dimension": "isolation",
+      "steps": [{"args": ["search", "--project", "app", "--query", "PRIVATE_DECOY"], "checks": [
+        {"path": ["data", "results"], "op": "equals", "value": []},
+        {"path": ["data", "total_matches"], "op": "equals", "value": 0}
+      ]}]
+    },
+    {
+      "id": "cross-project-read-refused",
+      "dimension": "isolation",
+      "steps": [{"args": ["read", "--project", "app", "--path", "${OTHER}/notes.md"], "checks": [
+        {"path": ["exit_code"], "op": "equals", "value": 1},
+        {"path": ["error"], "op": "contains", "value": "not registered"},
+        {"path": ["error"], "op": "excludes", "value": "PRIVATE_DECOY"}
+      ]}]
+    },
+    {
+      "id": "similar-folder-name-stays-unmapped",
+      "dimension": "isolation",
+      "steps": [{"args": ["route", "--cwd", "${APP}-unrelated"], "checks": [
+        {"path": ["data", "project"], "op": "equals", "value": null}
+      ]}]
+    },
+    {
+      "id": "remaining-work-cannot-disappear",
+      "dimension": "continuity",
+      "steps": [
+        {"handoff": {}, "remember": "OLD", "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"handoff": {"supersedes": ["${OLD}"], "remaining": []}, "checks": [
+          {"path": ["exit_code"], "op": "equals", "value": 1},
+          {"path": ["error"], "op": "contains", "value": "Unfinished"}
+        ]},
+        {"args": ["current", "--project", "app"], "checks": [{"path": ["data", "tasks", 0, "remaining_count"], "op": "equals", "value": 1}]}
+      ]
+    },
+    {
+      "id": "constraint-cannot-disappear",
+      "dimension": "continuity",
+      "steps": [
+        {"handoff": {}, "remember": "OLD", "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"handoff": {"supersedes": ["${OLD}"], "constraints": []}, "checks": [
+          {"path": ["exit_code"], "op": "equals", "value": 1},
+          {"path": ["error"], "op": "contains", "value": "Constraints silently"}
+        ]}
+      ]
+    },
+    {
+      "id": "implementation-is-not-release",
+      "dimension": "continuity",
+      "steps": [
+        {"handoff": {}, "remember": "SAVED", "checks": [{"path": ["exit_code"], "op": "equals", "value": 0}]},
+        {"args": ["read", "--project", "app", "--path", "${ROOT}/handoffs/app/${SAVED}.json", "--count", "100"], "checks": [
+          {"path": ["data", "truncated"], "op": "equals", "value": false},
+          {"path": ["data", "lines", "$json_lines", "completed"], "op": "equals", "value": ["Implement cursor"]},
+          {"path": ["data", "lines", "$json_lines", "validated"], "op": "equals", "value": []},
+          {"path": ["data", "lines", "$json_lines", "released"], "op": "equals", "value": []},
+          {"path": ["data", "lines", "$json_lines", "remaining"], "op": "equals", "value": ["Device acceptance"]}
+        ]}
+      ]
+    }
+  ]
+}

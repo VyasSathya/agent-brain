@@ -209,6 +209,13 @@ SessionStart re-renders the target whenever a source is newer. Claude imports `s
 python -m unittest discover -s tests
 ```
 
+For a versioned evaluation corpus with observable acceptance criteria, per-dimension
+scores and recorded real CLI outputs, see [the source-grounding evaluation](evals/README.md):
+
+```bash
+python -m evals.run --output evals/latest.json
+```
+
 ## License
 
 MIT

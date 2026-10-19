@@ -4,6 +4,7 @@ __pycache__/
 build/
 dist/
 .venv/
+evals/latest.json
 
 # Written when you run the quickstart against the example brain
 examples/tiny-brain/handoffs/*
