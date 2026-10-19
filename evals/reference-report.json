@@ -1,0 +1,771 @@
+{
+  "schema_version": 1,
+  "rubric_version": "source-grounding-v1",
+  "corpus_sha256": "5c62fb42cd050695d77c67aec3e734241eb7b8c27e3a15e755260d1c7526183c",
+  "engine_sha256": "5718e1ae669f756abd327438542e52a43a576becabf30172273de76fdcbc9f86",
+  "evaluator_sha256": "89185f05dc1953c3028688db3692b6202f8c54bc358f05ba7e687f59fd515fb2",
+  "passed": 12,
+  "total": 12,
+  "accepted": true,
+  "dimensions": {
+    "retrieval": {
+      "passed": 3,
+      "total": 3
+    },
+    "provenance": {
+      "passed": 3,
+      "total": 3
+    },
+    "isolation": {
+      "passed": 3,
+      "total": 3
+    },
+    "continuity": {
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "cases": [
+    {
+      "id": "current-correction-before-history",
+      "dimension": "retrieval",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\${OLD}.json",
+              "id": "${OLD}"
+            }
+          }
+        },
+        {
+          "step": 1,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\${NEW}.json",
+              "id": "${NEW}"
+            }
+          }
+        },
+        {
+          "step": 2,
+          "args": [
+            "search",
+            "--project",
+            "app",
+            "--query",
+            "Pagination"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "results": [
+                {
+                  "score": 1,
+                  "status": "current",
+                  "path": "${ROOT}\\handoffs\\app\\${NEW}.json",
+                  "line": 1,
+                  "id": "${NEW}",
+                  "evidence": [
+                    {
+                      "path": "${APP}/notes.md",
+                      "line": 2,
+                      "quote": "Pagination fixed: cursor skips zero rows.",
+                      "sha256_at_capture": "f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e"
+                    }
+                  ],
+                  "excerpt": "{\"project\": \"app\", \"task\": \"pagination\", \"objective\": \"Pagination correction\", \"completed\": [\"Implement cursor\"], \"remaining\": [\"Device acceptance\"], \"validated\": [\"Pagination fixed\"], \"released\": [], \"constraints\": [\"Do not deploy\"], \"evidence\": [{\"path\": \"${APP}/notes.md\", \"line\": 2, \"quote\": \"Pagination fixed: cursor skips zero rows.\", \"sha256_at_capture\": \"f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e\"}], \"supersedes\": [\"${OLD}\"], \"id\": \"${NEW}\", \"created_at\": \"2026-10-19T00:09:03.901122+00:00\"}",
+                  "excerpt_truncated": false,
+                  "detail": "read --project app --path \"${ROOT}\\handoffs\\app\\${NEW}.json\" --line 1"
+                },
+                {
+                  "score": 1,
+                  "status": "superseded",
+                  "path": "${ROOT}\\handoffs\\app\\archive\\${OLD}.json",
+                  "line": 1,
+                  "id": "${OLD}",
+                  "evidence": [
+                    {
+                      "path": "${APP}\\notes.md",
+                      "line": 1,
+                      "quote": "Pagination failed: duplicate rows.",
+                      "sha256_at_capture": "f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e"
+                    }
+                  ],
+                  "excerpt": "{\"project\": \"app\", \"task\": \"pagination\", \"objective\": \"Pagination correction\", \"completed\": [\"Implement cursor\"], \"remaining\": [\"Device acceptance\"], \"validated\": [], \"released\": [], \"constraints\": [\"Do not deploy\"], \"evidence\": [{\"path\": \"${APP}\\\\notes.md\", \"line\": 1, \"quote\": \"Pagination failed: duplicate rows.\", \"sha256_at_capture\": \"f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e\"}], \"id\": \"${OLD}\", \"created_at\": \"2026-10-19T00:09:03.716247+00:00\", \"supersedes\": []}",
+                  "excerpt_truncated": false,
+                  "detail": "read --project app --path \"${ROOT}\\handoffs\\app\\archive\\${OLD}.json\" --line 1"
+                },
+                {
+                  "score": 1,
+                  "status": "source; historical claims may be superseded",
+                  "path": "${APP}\\notes.md",
+                  "line": 1,
+                  "excerpt": "Pagination failed: duplicate rows.\nPagination fixed: cursor skips zero rows.",
+                  "excerpt_truncated": false,
+                  "detail": "read --project app --path \"${APP}\\notes.md\" --line 1"
+                }
+              ],
+              "total_matches": 3,
+              "truncated": false,
+              "next_offset": null,
+              "unavailable_sources": [],
+              "unavailable_total": 0,
+              "project": "app",
+              "note": "Keyword retrieval only; no semantic recall guarantee. Current handoffs precede historical evidence."
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "irrelevant-query-abstains",
+      "dimension": "retrieval",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "search",
+            "--project",
+            "app",
+            "--query",
+            "unfindablequasar"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "results": [],
+              "total_matches": 0,
+              "truncated": false,
+              "next_offset": null,
+              "unavailable_sources": [],
+              "unavailable_total": 0,
+              "project": "app",
+              "note": "Keyword retrieval only; no semantic recall guarantee. Current handoffs precede historical evidence."
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "search-pagination-has-continuation",
+      "dimension": "retrieval",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\4eca22862f0941dd80cf64fc3795c9b7.json",
+              "id": "4eca22862f0941dd80cf64fc3795c9b7"
+            }
+          }
+        },
+        {
+          "step": 1,
+          "args": [
+            "search",
+            "--project",
+            "app",
+            "--query",
+            "Pagination",
+            "--limit",
+            "1"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "results": [
+                {
+                  "score": 1,
+                  "status": "current",
+                  "path": "${ROOT}\\handoffs\\app\\4eca22862f0941dd80cf64fc3795c9b7.json",
+                  "line": 1,
+                  "id": "4eca22862f0941dd80cf64fc3795c9b7",
+                  "evidence": [
+                    {
+                      "path": "${APP}\\notes.md",
+                      "line": 1,
+                      "quote": "Pagination failed: duplicate rows.",
+                      "sha256_at_capture": "f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e"
+                    }
+                  ],
+                  "excerpt": "{\"project\": \"app\", \"task\": \"pagination\", \"objective\": \"Pagination correction\", \"completed\": [\"Implement cursor\"], \"remaining\": [\"Device acceptance\"], \"validated\": [], \"released\": [], \"constraints\": [\"Do not deploy\"], \"evidence\": [{\"path\": \"${APP}\\\\notes.md\", \"line\": 1, \"quote\": \"Pagination failed: duplicate rows.\", \"sha256_at_capture\": \"f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e\"}], \"id\": \"4eca22862f0941dd80cf64fc3795c9b7\", \"created_at\": \"2026-10-19T00:09:04.466073+00:00\", \"supersedes\": []}",
+                  "excerpt_truncated": false,
+                  "detail": "read --project app --path \"${ROOT}\\handoffs\\app\\4eca22862f0941dd80cf64fc3795c9b7.json\" --line 1"
+                }
+              ],
+              "total_matches": 2,
+              "truncated": true,
+              "next_offset": 1,
+              "unavailable_sources": [],
+              "unavailable_total": 0,
+              "project": "app",
+              "note": "Keyword retrieval only; no semantic recall guarantee. Current handoffs precede historical evidence."
+            }
+          }
+        },
+        {
+          "step": 2,
+          "args": [
+            "search",
+            "--project",
+            "app",
+            "--query",
+            "Pagination",
+            "--offset",
+            "1",
+            "--limit",
+            "1"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "results": [
+                {
+                  "score": 1,
+                  "status": "source; historical claims may be superseded",
+                  "path": "${APP}\\notes.md",
+                  "line": 1,
+                  "excerpt": "Pagination failed: duplicate rows.\nPagination fixed: cursor skips zero rows.",
+                  "excerpt_truncated": false,
+                  "detail": "read --project app --path \"${APP}\\notes.md\" --line 1"
+                }
+              ],
+              "total_matches": 2,
+              "truncated": false,
+              "next_offset": null,
+              "unavailable_sources": [],
+              "unavailable_total": 0,
+              "project": "app",
+              "note": "Keyword retrieval only; no semantic recall guarantee. Current handoffs precede historical evidence."
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "exact-source-line-readback",
+      "dimension": "provenance",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "read",
+            "--project",
+            "app",
+            "--path",
+            "${APP}/notes.md",
+            "--line",
+            "2",
+            "--count",
+            "1"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${APP}\\notes.md",
+              "lines": [
+                {
+                  "line": 2,
+                  "column": 0,
+                  "text": "Pagination fixed: cursor skips zero rows."
+                }
+              ],
+              "truncated": false,
+              "next_line": null,
+              "next_column": 0
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "fabricated-quote-rejected",
+      "dimension": "provenance",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 1,
+            "error": "agent-brain error: Evidence quote does not match ${APP}\\notes.md:2"
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "source-change-invalidates-evidence",
+      "dimension": "provenance",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\106b2098af8c4f969857bcd293b06c12.json",
+              "id": "106b2098af8c4f969857bcd293b06c12"
+            }
+          }
+        },
+        {
+          "step": 1,
+          "args": [
+            "current",
+            "--project",
+            "app"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "tasks": [
+                {
+                  "id": "106b2098af8c4f969857bcd293b06c12",
+                  "task": "pagination",
+                  "updated": "2026-10-19",
+                  "remaining_count": 1,
+                  "parked_count": 0,
+                  "path": "${ROOT}\\handoffs\\app\\106b2098af8c4f969857bcd293b06c12.json",
+                  "evidence_changed": false,
+                  "evidence_not_on_this_machine": 0
+                }
+              ],
+              "total": 1,
+              "older_not_shown": 0,
+              "next_offset": null,
+              "conflicts": [],
+              "note": "Read each current head; concurrent branches must be reconciled explicitly."
+            }
+          }
+        },
+        {
+          "step": 3,
+          "args": [
+            "current",
+            "--project",
+            "app"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "tasks": [
+                {
+                  "id": "106b2098af8c4f969857bcd293b06c12",
+                  "task": "pagination",
+                  "updated": "2026-10-19",
+                  "remaining_count": 1,
+                  "parked_count": 0,
+                  "path": "${ROOT}\\handoffs\\app\\106b2098af8c4f969857bcd293b06c12.json",
+                  "evidence_changed": true,
+                  "evidence_not_on_this_machine": 0
+                }
+              ],
+              "total": 1,
+              "older_not_shown": 0,
+              "next_offset": null,
+              "conflicts": [],
+              "note": "Read each current head; concurrent branches must be reconciled explicitly."
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "search-excludes-other-project",
+      "dimension": "isolation",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "search",
+            "--project",
+            "app",
+            "--query",
+            "PRIVATE_DECOY"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "results": [],
+              "total_matches": 0,
+              "truncated": false,
+              "next_offset": null,
+              "unavailable_sources": [],
+              "unavailable_total": 0,
+              "project": "app",
+              "note": "Keyword retrieval only; no semantic recall guarantee. Current handoffs precede historical evidence."
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "cross-project-read-refused",
+      "dimension": "isolation",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "read",
+            "--project",
+            "app",
+            "--path",
+            "${OTHER}/notes.md"
+          ],
+          "output": {
+            "exit_code": 1,
+            "error": "agent-brain error: Path is not registered in this project; no cross-project expansion"
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "similar-folder-name-stays-unmapped",
+      "dimension": "isolation",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "route",
+            "--cwd",
+            "${APP}-unrelated"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "project": null,
+              "role": "unmapped",
+              "cwd": "${APP}-unrelated"
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "remaining-work-cannot-disappear",
+      "dimension": "continuity",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\${OLD}.json",
+              "id": "${OLD}"
+            }
+          }
+        },
+        {
+          "step": 1,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 1,
+            "error": "agent-brain error: Unfinished work silently omitted; retain or explicitly resolve: ['Device acceptance']"
+          }
+        },
+        {
+          "step": 2,
+          "args": [
+            "current",
+            "--project",
+            "app"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "tasks": [
+                {
+                  "id": "${OLD}",
+                  "task": "pagination",
+                  "updated": "2026-10-19",
+                  "remaining_count": 1,
+                  "parked_count": 0,
+                  "path": "${ROOT}\\handoffs\\app\\${OLD}.json",
+                  "evidence_changed": false,
+                  "evidence_not_on_this_machine": 0
+                }
+              ],
+              "total": 1,
+              "older_not_shown": 0,
+              "next_offset": null,
+              "conflicts": [],
+              "note": "Read each current head; concurrent branches must be reconciled explicitly."
+            }
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "constraint-cannot-disappear",
+      "dimension": "continuity",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\${OLD}.json",
+              "id": "${OLD}"
+            }
+          }
+        },
+        {
+          "step": 1,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 1,
+            "error": "agent-brain error: Constraints silently omitted; retain or explicitly resolve: ['Do not deploy']"
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "implementation-is-not-release",
+      "dimension": "continuity",
+      "passed": true,
+      "observations": [
+        {
+          "step": 0,
+          "args": [
+            "handoff",
+            "--file",
+            "${ROOT}\\input.json"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\${SAVED}.json",
+              "id": "${SAVED}"
+            }
+          }
+        },
+        {
+          "step": 1,
+          "args": [
+            "read",
+            "--project",
+            "app",
+            "--path",
+            "${ROOT}/handoffs/app/${SAVED}.json",
+            "--count",
+            "100"
+          ],
+          "output": {
+            "exit_code": 0,
+            "data": {
+              "path": "${ROOT}\\handoffs\\app\\${SAVED}.json",
+              "lines": [
+                {
+                  "line": 1,
+                  "column": 0,
+                  "text": "{"
+                },
+                {
+                  "line": 2,
+                  "column": 0,
+                  "text": "  \"project\": \"app\","
+                },
+                {
+                  "line": 3,
+                  "column": 0,
+                  "text": "  \"task\": \"pagination\","
+                },
+                {
+                  "line": 4,
+                  "column": 0,
+                  "text": "  \"objective\": \"Pagination correction\","
+                },
+                {
+                  "line": 5,
+                  "column": 0,
+                  "text": "  \"completed\": ["
+                },
+                {
+                  "line": 6,
+                  "column": 0,
+                  "text": "    \"Implement cursor\""
+                },
+                {
+                  "line": 7,
+                  "column": 0,
+                  "text": "  ],"
+                },
+                {
+                  "line": 8,
+                  "column": 0,
+                  "text": "  \"remaining\": ["
+                },
+                {
+                  "line": 9,
+                  "column": 0,
+                  "text": "    \"Device acceptance\""
+                },
+                {
+                  "line": 10,
+                  "column": 0,
+                  "text": "  ],"
+                },
+                {
+                  "line": 11,
+                  "column": 0,
+                  "text": "  \"validated\": [],"
+                },
+                {
+                  "line": 12,
+                  "column": 0,
+                  "text": "  \"released\": [],"
+                },
+                {
+                  "line": 13,
+                  "column": 0,
+                  "text": "  \"constraints\": ["
+                },
+                {
+                  "line": 14,
+                  "column": 0,
+                  "text": "    \"Do not deploy\""
+                },
+                {
+                  "line": 15,
+                  "column": 0,
+                  "text": "  ],"
+                },
+                {
+                  "line": 16,
+                  "column": 0,
+                  "text": "  \"evidence\": ["
+                },
+                {
+                  "line": 17,
+                  "column": 0,
+                  "text": "    {"
+                },
+                {
+                  "line": 18,
+                  "column": 0,
+                  "text": "      \"path\": \"${APP}\\\\notes.md\","
+                },
+                {
+                  "line": 19,
+                  "column": 0,
+                  "text": "      \"line\": 1,"
+                },
+                {
+                  "line": 20,
+                  "column": 0,
+                  "text": "      \"quote\": \"Pagination failed: duplicate rows.\","
+                },
+                {
+                  "line": 21,
+                  "column": 0,
+                  "text": "      \"sha256_at_capture\": \"f7223e6222f667e4af86f2aee354df6668812d262721eccedc1dae97f9f86e8e\""
+                },
+                {
+                  "line": 22,
+                  "column": 0,
+                  "text": "    }"
+                },
+                {
+                  "line": 23,
+                  "column": 0,
+                  "text": "  ],"
+                },
+                {
+                  "line": 24,
+                  "column": 0,
+                  "text": "  \"id\": \"${SAVED}\","
+                },
+                {
+                  "line": 25,
+                  "column": 0,
+                  "text": "  \"created_at\": \"2026-10-19T00:09:07.855879+00:00\","
+                },
+                {
+                  "line": 26,
+                  "column": 0,
+                  "text": "  \"supersedes\": []"
+                },
+                {
+                  "line": 27,
+                  "column": 0,
+                  "text": "}"
+                }
+              ],
+              "truncated": false,
+              "next_line": null,
+              "next_column": 0
+            }
+          }
+        }
+      ],
+      "failures": []
+    }
+  ]
+}
